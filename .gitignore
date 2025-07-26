@@ -1,0 +1,51 @@
+# Ignore virtual environments
+.venv/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore large files
+*.zip
+*.h5
+*.pt
+*.pkl
+*.mp4
+*.csv
+
+# Ignore logs and system files
+*.log
+.DS_Store
+Thumbs.db
+
+#  AI model weights & large files
+*.pt
+*.h5
+*.ckpt
+*.pkl
+*.joblib
+*.onnx
+*.tflite
+
+# Dataset folders
+data/
+dataset/
+datasets/
+training_data/
+logs/
+checkpoints/
+
+#python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+  
+#vs code and pycharm IDE settings
+.vscode/
+.idea/
+ 
+#other project outputs
+output/
+temp/
+test_output/
