@@ -1,7 +1,4 @@
-# AI-Study-Companion
-An AI-powered study tool that generates MCQs, summaries from uploaded notes and PDFs.”
-# AI-Study-Companion
-An AI-powered study tool that generates MCQs, summaries from uploaded notes and PDFs.”
+
 # 📚 AI Study Companion
 
 **AI Study Companion** is an intelligent learning assistant that helps students study smarter by extracting content from PDFs and generating educational content like summaries, multiple-choice questions (MCQs), and quizzes using advanced AI models. Built with a Streamlit interface and powered by GROQ's LLaMA-3 models, sentence-transformers, and FAISS for contextual understanding and vector search.
