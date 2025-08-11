@@ -71,9 +71,6 @@ class GroqMCQGenerator:
         self.model = "llama3-70b-8192"
 
     def generate_mcqs(self, context, topic, num_questions, difficulty, question_types):
-        import json
-        import streamlit as st
-
         prompt = f"""
 Generate {num_questions} MCQs about \"{topic}\" with difficulty {difficulty}.
 Types: {', '.join(question_types)}.
@@ -126,6 +123,59 @@ Format:
             return []
 
 
+class GroqFlashcardGenerator:
+    def __init__(self, api_key: str):
+        from groq import Groq
+        self.client = Groq(api_key=api_key)
+        self.model = "llama3-8b-8192"  # Stable and supported model
+
+    def generate_flashcards(self, context, topic, num_cards=5):
+        prompt = f"""
+Generate {num_cards} educational flashcards from the content below about "{topic}".
+Each flashcard should have a question and a short, clear answer.
+
+Format:
+[
+  {{
+    "question": "...",
+    "answer": "..."
+  }}
+]
+
+CONTENT:
+{context}
+"""
+
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": "You are a helpful flashcard generator for students."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.5,
+                max_tokens=1500
+            )
+
+            raw = response.choices[0].message.content
+
+            # --- FIX: Extract only the JSON array from the output ---
+            import re
+            match = re.search(r"\[\s*{.*}\s*\]", raw, re.DOTALL)
+            if not match:
+                st.error("❌ No valid JSON array found in output.")
+                return []
+
+            json_part = match.group(0)
+
+            import json
+            return json.loads(json_part)
+
+        except Exception as e:
+            st.error(f"Flashcard generation failed: {str(e)}")
+            return []
+
+
 def generate_summary(api_key: str, context: str, topic: str, model: str = "llama3-8b-8192") -> str:
     try:
         from groq import Groq
@@ -157,6 +207,8 @@ SUMMARY:
     except Exception as e:
         st.error(f"Summary generation failed: {str(e)}")
         return ""
+
+
 def get_motivational_quote():
     quotes = [
         "Believe you can and you're halfway there.",
@@ -168,13 +220,14 @@ def get_motivational_quote():
     ]
     return random.choice(quotes)
 
+
 # ------------------------------
 # MAIN APP
 # ------------------------------
 def main():
     st.set_page_config(page_title="📚 AI Study Companion", layout="wide")
     st.title("📚 AI Study Companion")
-    st.markdown("Upload PDFs, generate summaries, and create MCQs with GROQ!")
+    st.markdown("Upload PDFs, generate summaries, MCQs, and flashcards with GROQ!")
 
     if not GROQ_AVAILABLE:
         st.stop()
@@ -189,9 +242,10 @@ def main():
         st.session_state.score = 0
 
     with st.sidebar:
-        st.header("Summary and MCQ generation")
-        mcq_api_key = "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"
-        summary_api_key = "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"
+        st.header("AI STUDY COMPANION")
+        mcq_api_key = "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"
+        summary_api_key = "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"
+        flashcard_api_key = "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"
 
         st.divider()
         if "quote" not in st.session_state:
@@ -216,8 +270,8 @@ def main():
     if st.session_state.get("documents_processed", False):
         st.success("✅ Documents processed and ready!")
 
-        topic = st.text_input("Topic (for summary and MCQs)")
-        num_questions = st.slider("Number of MCQs", 1, 10, 3)
+        topic = st.text_input("Topic (for summary, MCQs, and flashcards)")
+        num_questions = st.slider("Number of MCQs", 1, 20, 5)
         difficulty = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"], index=1)
         question_types = st.multiselect("Question Types", ["Factual", "Conceptual", "Application"], default=["Factual"])
 
@@ -247,7 +301,6 @@ def main():
                                 st.success(f"**{opt_label}.** {option_text}")
                             else:
                                 st.write(f"**{opt_label}.** {option_text}")
-
                         st.caption(f"Explanation: {mcq['explanation']}")
 
                 mcq_df = pd.DataFrame([
@@ -271,6 +324,25 @@ def main():
                     st.session_state.score = 0
                     st.rerun()
 
+        if topic and st.button("📇 Generate Flashcards"):
+            chunks = st.session_state.vector_store.similarity_search(topic, k=5)
+            context = "\n\n".join(chunks)[:3000]
+            flashcard_gen = GroqFlashcardGenerator(api_key=flashcard_api_key)
+            flashcards = flashcard_gen.generate_flashcards(context, topic, num_cards=5)
+
+            if flashcards:
+                st.markdown("### 📇 Flashcards")
+                for i, fc in enumerate(flashcards):
+                    with st.expander(f"Card {i+1}: {fc['question']}"):
+                        st.success(fc["answer"])
+
+                st.download_button(
+                    "📥 Download Flashcards JSON",
+                    json.dumps(flashcards, indent=2),
+                    "flashcards.json",
+                    "application/json"
+                )
+
         # Quiz Mode Section
         if st.session_state.mcqs and st.button("🚀 Start Quiz Mode"):
             st.session_state.quiz_mode = True
@@ -290,7 +362,7 @@ def main():
                     options=["A", "B", "C", "D"],
                     key=f"quiz_q_{idx}",
                     format_func=lambda x: f"{x}. {current['options'].get(x, '[Missing Option]')}"
-)
+                )
 
                 if st.button("Submit Answer"):
                     if selected == current['correct_answer']:
@@ -311,6 +383,7 @@ def main():
                     st.session_state.quiz_index = 0
                     st.session_state.score = 0
                     st.rerun()
+
 
 if __name__ == "__main__":
     main()
