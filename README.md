@@ -1,7 +1,6 @@
-
 # 📚 AI Study Companion
 
-**AI Study Companion** is an intelligent learning assistant that helps students study smarter by extracting content from PDFs and generating educational content like summaries, multiple-choice questions (MCQs), and quizzes using advanced AI models. Built with a Streamlit interface and powered by GROQ's LLaMA-3 models, sentence-transformers, and FAISS for contextual understanding and vector search.
+**AI Study Companion** is an intelligent learning assistant that helps students study smarter by extracting content from PDFs and generating educational content like summaries, multiple-choice questions (MCQs),Generate Flashcards and quizzes using advanced AI models. Built with a Streamlit interface and powered by GROQ's LLaMA-3 models, sentence-transformers, and FAISS for contextual understanding and vector search.
 
 ---
 
@@ -12,6 +11,7 @@
 - ✂️ Chunk text into manageable sections for AI processing
 - 📝 Generate concise, topic-based summaries
 - 🧠 Generate MCQs based on difficulty and question types (factual, conceptual, application)
+- **  Generate Flashcards on the given topic
 - 🚀 Interactive quiz mode with scoring and feedback
 - 📥 Download MCQs as JSON or CSV
 - 💡 Displays daily motivational quotes for learners
@@ -20,14 +20,15 @@
 
 ## 🧰 Tech Stack
 
-| Layer        | Tools / Libraries                                |
-|--------------|--------------------------------------------------|
-| **Frontend** | Streamlit                                        |
-| **PDF Parsing** | PyPDF2                                       |
-| **NLP Embedding** | sentence-transformers (`all-MiniLM-L6-v2`) |
-| **Similarity Search** | FAISS                                  |
-| **LLM Integration** | GROQ API (`llama3-70b-8192`, `llama3-8b-8192`) |
-| **Data Processing** | pandas, json, numpy                      |
+| Layer                 | Tools / Libraries                                |
+|--------------         |--------------------------------------------------|
+| **Frontend**          | Streamlit                                        |
+| **PDF Parsing**       | PyPDF2                                           |
+| **NLP Embedding**     | sentence-transformers (`all-MiniLM-L6-v2`)       |
+| **Similarity Search** | FAISS                                            |
+| **LLM Integration**   |GROQ API (`llama3-70b-8192`, `llama3-8b-8192`,
+                                                `llama3-8b-8192`)          |
+| **Data Processing**   | pandas, json, numpy                              |
 
 ---
 
@@ -74,12 +75,12 @@ AI-study-companion/
 * Enter a topic you'd like to review
 * Click "Generate Summary" to get a short, focused explanation
 * Click "Generate MCQs" to create practice questions
+* Clikc "Generate Flashcards" to create flashcards for easy understanding
 * Use Quiz Mode to test your knowledge
 * Export the questions for offline practice!
 
 
 ### ✅ To-Do / Improvements
- * Flashcard generation
  * OCR support for scanned handwritten notes
  * Login/authentication for personalized user data
  * Save question sets for later review
