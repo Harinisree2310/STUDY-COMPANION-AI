@@ -26,8 +26,7 @@
 | **PDF Parsing**       | PyPDF2                                           |
 | **NLP Embedding**     | sentence-transformers (`all-MiniLM-L6-v2`)       |
 | **Similarity Search** | FAISS                                            |
-| **LLM Integration**   |GROQ API (`llama3-70b-8192`, `llama3-8b-8192`,
-                                                `llama3-8b-8192`)          |
+| **LLM Integration**   |GROQ API (`llama3-70b-8192`, `llama3-8b-8192`, `llama3-8b-8192`)          |
 | **Data Processing**   | pandas, json, numpy                              |
 
 ---
