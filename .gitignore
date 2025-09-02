@@ -1,0 +1,27 @@
+# --- Environment Variables ---
+# Never commit your secret API keys!
+.env
+
+# --- Python ---
+# Byte-compiled / optimized / C extensions
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environments - to ignore your local Python installation
+venv/
+env/
+ENV/
+
+# --- VS Code ---
+# Editor-specific settings and cache
+.vscode/
+
+# --- Caches ---
+# To ignore the downloaded sentence-transformers model files
+.cache/
+
+# --- Streamlit ---
+# Streamlit-specific cache and configuration
+.streamlit/

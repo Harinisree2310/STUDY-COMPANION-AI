@@ -1,0 +1,33 @@
+# Environment variables
+python-dotenv
+
+# Streamlit app
+streamlit
+
+# OpenAI Groq client
+groq
+
+# PDF handling
+PyPDF2
+
+# NLP embeddings + similarity search
+sentence-transformers
+faiss-cpu   # use faiss-gpu if you want GPU acceleration
+
+# Data handling
+pandas
+numpy
+
+# OCR & images (not in this code but common in your project setup)
+Pillow
+opencv-python
+pytesseract
+
+# Document formats
+python-docx
+pypandoc
+reportlab
+odfpy
+
+# Requests (for safety in API calls)
+requests
